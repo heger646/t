@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create a Webpage</title>
+</head>
+<body>
+  <h2>Create a new HTML page</h2>
+  <form action="/save_text" method="POST">
+    <label for="filename">File name (with .html):</label>
+    <input type="text" id="filename" name="filename" placeholder="example.html" required>
+    <br><br>
+    <label for="content">Page content:</label><br>
+    <textarea id="content" name="content" rows="10" cols="50" placeholder="Enter your page text here"></textarea>
+    <br><br>
+    <button type="submit">Save & View</button>
+  </form>
+</body>
+</html>

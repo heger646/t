@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Snake</title>
+<style>
+  body { background:#222; color:#eee; text-align:center; font-family:sans-serif; }
+  canvas { background:#000; display:block; margin:20px auto; }
+</style>
+</head>
+<body>
+<h1>Snake Game</h1>
+<canvas id="game" width="400" height="400"></canvas>
+<p>Use arrow keys to move</p>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+const grid = 20; // cell size
+let count = 0;
+
+let snake = [{x:160, y:160}];
+let dx = grid;
+let dy = 0;
+let apple = {x:0, y:0};
+
+function getRandomPosition() {
+  return {
+    x: Math.floor(Math.random() * canvas.width / grid) * grid,
+    y: Math.floor(Math.random() * canvas.height / grid) * grid
+  };
+}
+
+apple = getRandomPosition();
+
+function loop() {
+  requestAnimationFrame(loop);
+  if(++count < 4) return; // speed control
+  count = 0;
+
+  // Move snake
+  const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+  
+  // Check collisions
+  if(head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height ||
+     snake.some(s => s.x === head.x && s.y === head.y)) {
+    snake = [{x:160, y:160}];
+    dx = grid; dy = 0;
+    apple = getRandomPosition();
+  }
+
+  snake.unshift(head);
+
+  // Eat apple
+  if(head.x === apple.x && head.y === apple.y){
+    apple = getRandomPosition();
+  } else {
+    snake.pop();
+  }
+
+  // Draw
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "red";
+  ctx.fillRect(apple.x, apple.y, grid-1, grid-1);
+
+  ctx.fillStyle = "lime";
+  snake.forEach(s => ctx.fillRect(s.x, s.y, grid-1, grid-1));
+}
+
+// Controls
+document.addEventListener('keydown', e => {
+  if(e.key === 'ArrowUp' && dy === 0){ dx = 0; dy = -grid; }
+  if(e.key === 'ArrowDown' && dy === 0){ dx = 0; dy = grid; }
+  if(e.key === 'ArrowLeft' && dx === 0){ dx = -grid; dy = 0; }
+  if(e.key === 'ArrowRight' && dx === 0){ dx = grid; dy = 0; }
+});
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
